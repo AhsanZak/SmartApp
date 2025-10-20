@@ -8,6 +8,7 @@ import os
 from models.document import Document, DocumentChunk
 from processors.file_processor_factory import FileProcessorFactory
 from services.embedding_service import EmbeddingService
+import json
 
 
 class DocumentService:
@@ -94,12 +95,13 @@ class DocumentService:
             extracted_data = processor.process(document.file_path)
             
             document.extracted_text = extracted_data.get("text", "")
-            document.metadata = extracted_data.get("metadata", {})
+            document.extra_metadata = extracted_data.get("metadata", {})
             
             # Create embedding for the document
             if document.extracted_text:
                 embedding = self.embedding_service.create_embedding(document.extracted_text)
-                document.embedding = embedding
+                # store as JSON when not using pgvector
+                document.embedding = json.dumps(embedding)
                 
                 # Create chunks and their embeddings
                 chunks = self._create_chunks(document.extracted_text)
@@ -110,7 +112,7 @@ class DocumentService:
                         document_id=document.id,
                         chunk_index=idx,
                         content=chunk_text,
-                        embedding=chunk_embedding
+                        embedding=json.dumps(chunk_embedding)
                     )
                     self.db.add(chunk)
             

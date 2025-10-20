@@ -54,8 +54,8 @@ docker exec -it smtapp_ollama ollama pull codellama
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8000
 - **API Documentation**: http://localhost:8000/docs
-- **Ollama**: http://localhost:11434
-- **PostgreSQL**: localhost:5432
+- **Ollama**: http://192.168.100.25:11434 (remote)
+- **SQLite DB file**: smtapp_core/smtapp.db (auto-created)
 
 ## Local Development Setup
 
@@ -100,23 +100,15 @@ npm start
 
 ### 1. Database Configuration
 
-Edit `config/app.toml` to configure database settings:
+Default database is SQLite (no setup required). To use SQLite locally, you can leave database settings as-is.
 
-```toml
-[database]
-dialect = "postgresql"
-host = "postgres"
-port = 5432
-username = "smtapp"
-password = "smtapp123"
-database = "smtapp_db"
-```
+To switch to PostgreSQL later, update `DATABASE_URL` and docker-compose accordingly.
 
-### 2. Ollama Configuration
+### 2. Ollama Configuration (Remote)
 
 ```toml
 [ollama]
-base_url = "http://ollama:11434"
+base_url = "http://192.168.100.25:11434"
 timeout = 120
 default_model = "llama2"
 ```

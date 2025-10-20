@@ -179,22 +179,17 @@ The frontend is built with **React** and follows a component-based architecture:
 
 ## 🐳 Docker Services
 
-1. **postgres** (pgvector/pgvector:pg16)
-   - PostgreSQL with pgvector extension
-   - Port: 5432
-   - Volume: postgres_data
-
-2. **ollama** (ollama/ollama:latest)
+1. **ollama** (ollama/ollama:latest)
    - Local LLM runtime
    - Port: 11434
    - Volume: ollama_data
 
-3. **backend** (FastAPI)
+2. **backend** (FastAPI)
    - Python 3.11
    - Port: 8000
    - Volumes: app code, uploads
 
-4. **frontend** (React)
+3. **frontend** (React)
    - Node.js 18
    - Port: 3000
    - Volume: app code

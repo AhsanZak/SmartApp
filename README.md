@@ -8,14 +8,14 @@ A comprehensive document analysis application that supports multiple file types 
 - 📄 Process various file types: PDF, DOCX, XLSX, JSON, Audio, Video, Images
 - 💬 ChatGPT-like interface for document interaction
 - 🐳 Docker-based deployment for easy setup
-- 🔍 Vector-based semantic search using PostgreSQL with pgvector
+- 🔍 Embedding-ready design (SQLite by default; can enable PostgreSQL + pgvector later)
 - 🎯 Modular and scalable architecture
 
 ## Architecture
 
 - **Backend**: FastAPI (Python) - `smtapp_core`
 - **Frontend**: React - `smtapp_client`
-- **Database**: PostgreSQL with pgvector extension
+- **Database**: SQLite (default). PostgreSQL + pgvector optional
 - **LLM**: Ollama for local models
 - **ORM**: SQLAlchemy
 
@@ -67,18 +67,47 @@ cp .env.example .env
 docker-compose up -d
 ```
 
-4. Access the application:
+4. Initialize the database:
+```bash
+# Windows
+scripts\init_db.bat
+
+# Linux/Mac
+chmod +x scripts/init_db.sh
+./scripts/init_db.sh
+```
+
+5. Access the application:
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:8000
    - API Documentation: http://localhost:8000/docs
 
-### Pull Ollama Models
+### Initialize Database
 
-After starting the services, pull the models you want to use:
+The database tables are automatically created when the backend starts, but you can also initialize manually:
 
 ```bash
-docker exec -it smtapp_ollama ollama pull llama2
-docker exec -it smtapp_ollama ollama pull mistral
+# Windows
+scripts\init_db.bat
+
+# Linux/Mac  
+./scripts/init_db.sh
+
+# Or directly
+cd smtapp_core
+python init_db.py
+```
+
+See [DATABASE_SETUP.md](DATABASE_SETUP.md) for detailed information.
+
+### Ollama Configuration
+
+This app now uses a remote Ollama host at `http://192.168.100.25:11434`.
+
+If you have access to that machine, pull models there:
+
+```bash
+ssh user@192.168.100.25 "ollama pull llama2 && ollama pull mistral"
 ```
 
 ## Development
@@ -104,10 +133,18 @@ npm start
 ## Configuration
 
 Edit `config/app.toml` to configure:
-- Database settings
-- Model configurations
-- API endpoints
-- Processing options
+- Database settings (host, port, credentials)
+- Model configurations (Ollama, HuggingFace)
+- API endpoints and settings
+- Processing options (file size limits, supported formats)
+
+The database configuration can also be set via environment variables in `.env`:
+```bash
+DATABASE_URL=postgresql://username:password@host:port/database
+POSTGRES_USER=smtapp
+POSTGRES_PASSWORD=smtapp123
+POSTGRES_DB=smtapp_db
+```
 
 ## Supported File Types
 

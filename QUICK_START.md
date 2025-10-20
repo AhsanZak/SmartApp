@@ -22,12 +22,21 @@ chmod +x scripts/init.sh
 docker-compose up -d
 ```
 
-### Step 2: Pull AI Model
+### Step 2: Initialize Database
 ```bash
-docker exec -it smtapp_ollama ollama pull llama2
+# Windows
+scripts\init_db.bat
+
+# Linux/Mac
+./scripts/init_db.sh
 ```
 
-### Step 3: Access Application
+### Step 3: Ensure remote Ollama has a model
+```bash
+ssh user@192.168.100.25 "ollama pull llama2"
+```
+
+### Step 4: Access Application
 - Frontend: http://localhost:3000
 - API Docs: http://localhost:8000/docs
 
@@ -132,13 +141,7 @@ docker exec -it smtapp_ollama ollama pull llama2
 ```
 
 ### Database connection error?
-```bash
-# Restart database
-docker-compose restart postgres
-
-# Check database logs
-docker logs smtapp_postgres
-```
+Using SQLite by default, so no database service is required. If you switched to PostgreSQL, refer to DATABASE_SETUP.md.
 
 ### Port already in use?
 Edit `docker-compose.yml` and change port mappings:

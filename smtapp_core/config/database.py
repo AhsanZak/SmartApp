@@ -2,13 +2,13 @@
 Database configuration and session management
 Uses SQLAlchemy with PostgreSQL and pgvector extension
 """
-from sqlalchemy import create_engine, event
+from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from typing import Generator
 from contextlib import contextmanager
 
-from config.settings import get_settings, get_toml_config
+from config.settings import get_settings
 
 
 settings = get_settings()
@@ -29,13 +29,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 
-# Enable pgvector extension
-@event.listens_for(engine, "connect")
-def receive_connect(dbapi_conn, connection_record):
-    """Enable pgvector extension on connect"""
-    with dbapi_conn.cursor() as cursor:
-        cursor.execute("CREATE EXTENSION IF NOT EXISTS vector")
-        dbapi_conn.commit()
+# No database-specific extensions when using SQLite
 
 
 def get_db() -> Generator[Session, None, None]:

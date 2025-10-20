@@ -21,11 +21,11 @@ class Settings(BaseSettings):
     # Database Configuration
     database_url: str = os.getenv(
         "DATABASE_URL",
-        "postgresql://smtapp:smtapp123@localhost:5432/smtapp_db"
+        "sqlite:///./smtapp.db"
     )
     
     # Ollama Configuration
-    ollama_base_url: str = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    ollama_base_url: str = os.getenv("OLLAMA_BASE_URL", "http://192.168.100.25:11434")
     ollama_timeout: int = 120
     ollama_default_model: str = "llama2"
     

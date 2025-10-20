@@ -1,36 +1,9 @@
 version: '3.8'
 
 services:
-  # PostgreSQL with pgvector extension
-  postgres:
-    image: pgvector/pgvector:pg16
-    container_name: smtapp_postgres
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-smtapp}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-smtapp123}
-      POSTGRES_DB: ${POSTGRES_DB:-smtapp_db}
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U smtapp"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - smtapp_network
 
   # Ollama service for local LLM models
-  ollama:
-    image: ollama/ollama:latest
-    container_name: smtapp_ollama
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama_data:/root/.ollama
-    networks:
-      - smtapp_network
+  # Using remote Ollama at 192.168.100.25:11434; local service disabled
 
   # FastAPI Backend
   backend:
@@ -39,7 +12,7 @@ services:
       dockerfile: Dockerfile
     container_name: smtapp_backend
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-smtapp}:${POSTGRES_PASSWORD:-smtapp123}@postgres:5432/${POSTGRES_DB:-smtapp_db}
+      - DATABASE_URL=sqlite:////app/smtapp.db
       - OLLAMA_BASE_URL=http://ollama:11434
     ports:
       - "8000:8000"
@@ -47,8 +20,6 @@ services:
       - ./smtapp_core:/app
       - uploads_data:/app/uploads
     depends_on:
-      postgres:
-        condition: service_healthy
       ollama:
         condition: service_started
     networks:
@@ -74,7 +45,6 @@ services:
       - smtapp_network
 
 volumes:
-  postgres_data:
   ollama_data:
   uploads_data:
 
