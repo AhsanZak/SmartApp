@@ -1,0 +1,38 @@
+.App {
+  text-align: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.App-header {
+  background: white;
+  padding: 60px 80px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.App-header h1 {
+  font-size: 3rem;
+  color: #667eea;
+  margin-bottom: 20px;
+}
+
+.App-header p {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.App-header .note {
+  margin-top: 30px;
+  padding: 15px 25px;
+  background: #f0f4ff;
+  border-left: 4px solid #667eea;
+  color: #333;
+  font-size: 1rem;
+  border-radius: 5px;
+}
+

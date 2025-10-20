@@ -1,0 +1,111 @@
+[app]
+name = "Smart App"
+version = "1.0.0"
+description = "Intelligent document analysis platform"
+debug = true
+
+[database]
+# PostgreSQL Configuration
+dialect = "postgresql"
+host = "postgres"
+port = 5432
+username = "smtapp"
+password = "smtapp123"
+database = "smtapp_db"
+pool_size = 10
+max_overflow = 20
+echo = false
+
+[database.vector]
+# pgvector configuration
+enabled = true
+dimensions = 384  # sentence-transformers/all-MiniLM-L6-v2
+distance_metric = "cosine"
+
+[ollama]
+# Ollama Configuration
+base_url = "http://ollama:11434"
+timeout = 120
+default_model = "llama2"
+
+[ollama.models]
+# Available models (pull these first)
+llama2 = { name = "llama2", context_length = 4096 }
+mistral = { name = "mistral", context_length = 8192 }
+codellama = { name = "codellama", context_length = 4096 }
+llama3 = { name = "llama3", context_length = 8192 }
+
+[huggingface]
+# HuggingFace Configuration
+enabled = true
+cache_dir = "./models/huggingface"
+default_embeddings = "sentence-transformers/all-MiniLM-L6-v2"
+
+[huggingface.models]
+# HuggingFace models for specific tasks
+embeddings = "sentence-transformers/all-MiniLM-L6-v2"
+summarization = "facebook/bart-large-cnn"
+translation = "Helsinki-NLP/opus-mt-en-es"
+
+[api]
+# API Configuration
+host = "0.0.0.0"
+port = 8000
+workers = 4
+reload = true
+
+[api.rate_limit]
+enabled = true
+requests_per_minute = 60
+
+[processing]
+# File Processing Configuration
+max_file_size_mb = 100
+supported_formats = [
+    "pdf", "docx", "doc", "txt", "md",
+    "xlsx", "xls", "csv",
+    "json", "xml",
+    "jpg", "jpeg", "png", "gif",
+    "mp3", "wav", "mp4", "avi"
+]
+upload_dir = "./uploads"
+temp_dir = "./temp"
+
+[processing.pdf]
+extract_images = true
+extract_tables = true
+ocr_enabled = true
+
+[processing.audio]
+transcription_model = "whisper"
+sample_rate = 16000
+
+[processing.video]
+extract_frames = true
+frames_per_second = 1
+extract_audio = true
+
+[chromadb]
+# ChromaDB Configuration (optional vector DB)
+enabled = false
+persist_directory = "./data/chromadb"
+collection_name = "documents"
+
+[redis]
+# Redis Configuration (for caching and celery)
+enabled = false
+host = "localhost"
+port = 6379
+db = 0
+
+[security]
+# Security settings
+secret_key = "your-secret-key-change-in-production"
+algorithm = "HS256"
+access_token_expire_minutes = 30
+
+[logging]
+level = "INFO"
+format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+file = "logs/app.log"
+
